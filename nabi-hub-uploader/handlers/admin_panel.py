@@ -9,7 +9,8 @@ from __future__ import annotations
 from typing import Callable
 
 from aiogram import Router, F, Bot
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
+from aiogram.filters import Command
 from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
 
@@ -34,6 +35,34 @@ from keyboards.inline import (
 )
 
 router = Router(name="admin_panel")
+
+# ═══════════════════════════════════════════════════════
+# PANEL ENTRY POINTS (command + reply keyboard)
+# The bot menu exposes /admin (label: «پنل مدیریت») and the
+# reply keyboard shows «📋 پنل مدیریت» — but no message
+# handler existed for them, so pressing them silently did
+# nothing. These handlers open the same inline panel that
+# /start shows to admins.
+# ═══════════════════════════════════════════════════════
+
+
+@router.message(Command("admin"))
+@router.message(F.text == "📋 پنل مدیریت")
+async def open_admin_panel(
+    message: Message,
+    t: Callable[[str], str],
+    is_admin: bool,
+) -> None:
+    """Open the admin panel (from /admin command or reply button)."""
+    if not is_admin:
+        return
+
+    await message.answer(
+        t("welcome_admin"),
+        reply_markup=admin_main_menu(),
+        parse_mode="Markdown",
+    )
+
 
 
 # ═══════════════════════════════════════════════════════
