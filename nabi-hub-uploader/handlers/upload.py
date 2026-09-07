@@ -442,3 +442,73 @@ async def cancel_link_upload(
     """Cancel link upload."""
     await state.clear()
     await message.answer(t("upload_cancelled"), reply_markup=admin_reply_menu())
+
+# ═══════════════════════════════════════════════════════
+# INLINE PANEL UPLOAD BUTTONS → FSM ENTRY POINTS
+# These handlers were missing — the admin panel buttons
+# (آپلود تکی / گروهی / از لینک) sent callbacks that no
+# handler matched, so they silently did nothing.
+# ═══════════════════════════════════════════════════════
+
+
+@router.callback_query(F.data == CD.ADMIN_UPLOAD_SINGLE)
+async def cb_start_single_upload(
+    callback: CallbackQuery,
+    state: FSMContext,
+    t: Callable[[str], str],
+    is_admin: bool,
+) -> None:
+    """Start single file upload from the inline admin panel."""
+    if not is_admin:
+        await callback.answer(t("no_permission"), show_alert=True)
+        return
+
+    await state.set_state(UploadStates.waiting_single_file)
+    await callback.message.answer(
+        t("upload_start"),
+        reply_markup=cancel_keyboard(),
+    )
+    await callback.answer()
+
+
+@router.callback_query(F.data == CD.ADMIN_UPLOAD_ALBUM)
+async def cb_start_album_upload(
+    callback: CallbackQuery,
+    state: FSMContext,
+    t: Callable[[str], str],
+    is_admin: bool,
+) -> None:
+    """Start album/bulk upload from the inline admin panel."""
+    if not is_admin:
+        await callback.answer(t("no_permission"), show_alert=True)
+        return
+
+    album_id = FileService.generate_album_id()
+    await state.set_state(UploadStates.waiting_album_files)
+    await state.update_data(album_id=album_id, files=[])
+    await callback.message.answer(
+        t("upload_album_start"),
+        reply_markup=done_keyboard(),
+    )
+    await callback.answer()
+
+
+@router.callback_query(F.data == CD.ADMIN_UPLOAD_LINK)
+async def cb_start_link_upload(
+    callback: CallbackQuery,
+    state: FSMContext,
+    t: Callable[[str], str],
+    is_admin: bool,
+) -> None:
+    """Start link upload from the inline admin panel."""
+    if not is_admin:
+        await callback.answer(t("no_permission"), show_alert=True)
+        return
+
+    await state.set_state(UploadStates.waiting_link)
+    await callback.message.answer(
+        t("upload_link_prompt"),
+        reply_markup=cancel_keyboard(),
+    )
+    await callback.answer()
+
