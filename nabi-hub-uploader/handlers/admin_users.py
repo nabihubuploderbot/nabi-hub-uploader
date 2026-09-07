@@ -170,7 +170,7 @@ async def process_ban_user(
                 reply_markup=admin_reply_menu(),
             )
     except ValueError:
-        await message.answer("⚠️ آیدی نامعتبر.")
+        await message.answer("⚠️ آیدی نامعتبر.", reply_markup=panel_button())
 
 
 # ═══════════════════════════════════════════════════════

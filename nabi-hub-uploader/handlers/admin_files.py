@@ -206,7 +206,7 @@ async def process_file_delete(
         file_record = await FileService.get_by_id(session, file_id)
 
         if not file_record:
-            await message.answer("⚠️ فایل یافت نشد.")
+            await message.answer("⚠️ فایل یافت نشد.", reply_markup=panel_button())
             await state.clear()
             return
 
@@ -231,7 +231,7 @@ async def process_file_delete(
         )
 
     except ValueError:
-        await message.answer("⚠️ آیدی نامعتبر.")
+        await message.answer("⚠️ آیدی نامعتبر.", reply_markup=panel_button())
 
 
 @router.callback_query(F.data.startswith(f"{CD.FILE_DELETE_CONFIRM}:"))

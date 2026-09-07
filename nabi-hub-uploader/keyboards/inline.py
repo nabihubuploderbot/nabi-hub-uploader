@@ -485,3 +485,72 @@ def back_button(callback_data: str = CD.ADMIN_PANEL) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     builder.row(_btn("🔙 بازگشت", callback_data))
     return builder.as_markup()
+
+
+# ═══════════════════════════════════════════════════════
+# کیبوردهای کمکی — همه پیام‌ها باید دکمه داشته باشن
+# ═══════════════════════════════════════════════════════
+
+
+def panel_button() -> InlineKeyboardMarkup:
+    """بازگشت به پنل اصلی."""
+    builder = InlineKeyboardBuilder()
+    builder.row(_btn("🏠 بازگشت به پنل", CD.ADMIN_PANEL))
+    return builder.as_markup()
+
+
+def settings_button() -> InlineKeyboardMarkup:
+    """بازگشت به تنظیمات."""
+    builder = InlineKeyboardBuilder()
+    builder.row(_btn("🔙 بازگشت به تنظیمات", CD.ADMIN_SETTINGS))
+    return builder.as_markup()
+
+
+def success_panel(text: str = "✅ عملیات با موفقیت انجام شد.") -> tuple[str, InlineKeyboardMarkup]:
+    """پیام موفقیت + دکمه بازگشت به پنل."""
+    return text, panel_button()
+
+
+def success_settings(text: str = "✅ عملیات با موفقیت انجام شد.") -> tuple[str, InlineKeyboardMarkup]:
+    """پیام موفقیت + دکمه بازگشت به تنظیمات."""
+    return text, settings_button()
+
+
+def error_panel(text: str = "⚠️ خطایی رخ داد.") -> tuple[str, InlineKeyboardMarkup]:
+    """پیام خطا + دکمه بازگشت به پنل."""
+    return text, panel_button()
+
+
+def cancel_button(callback_data: str = CD.CANCEL) -> InlineKeyboardMarkup:
+    """دکمه لغو (برای FSM)."""
+    builder = InlineKeyboardBuilder()
+    builder.row(_btn("❌ لغو عملیات", callback_data))
+    return builder.as_markup()
+
+
+def cancel_panel_button() -> InlineKeyboardMarkup:
+    """دکمه لغو + بازگشت به پنل."""
+    builder = InlineKeyboardBuilder()
+    builder.row(
+        _btn("❌ لغو عملیات", CD.CANCEL),
+        _btn("🏠 پنل اصلی", CD.ADMIN_PANEL),
+    )
+    return builder.as_markup()
+
+
+def confirm_cancel(confirm_data: str = CD.CONFIRM, cancel_data: str = CD.CANCEL) -> InlineKeyboardMarkup:
+    """دکمه تأیید و لغو."""
+    builder = InlineKeyboardBuilder()
+    builder.row(
+        _btn("✅ بله، مطمئنم", confirm_data),
+        _btn("❌ خیر، لغو", cancel_data),
+    )
+    return builder.as_markup()
+
+
+def retry_button(callback_data: str) -> InlineKeyboardMarkup:
+    """دکمه تلاش مجدد."""
+    builder = InlineKeyboardBuilder()
+    builder.row(_btn("🔄 تلاش مجدد", callback_data))
+    builder.row(_btn("🏠 پنل اصلی", CD.ADMIN_PANEL))
+    return builder.as_markup()

@@ -151,7 +151,7 @@ async def receive_broadcast_media(
         media_file_id = message.animation.file_id
 
     if not media_type or not media_file_id:
-        await message.answer("⚠️ نوع فایل پشتیبانی نمی‌شود.")
+        await message.answer("⚠️ نوع فایل پشتیبانی نمی‌شود.", reply_markup=panel_button())
         return
 
     await state.update_data(
