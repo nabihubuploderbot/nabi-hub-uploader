@@ -291,7 +291,7 @@ def admin_admin_management() -> InlineKeyboardMarkup:
         _btn("🔑 تنظیم دسترسی‌ها", CD.ADMIN_PERMS),
     )
     builder.row(
-        _btn("🔙 بازگشت", CD.ADV_ADMIN_MGMT),
+        _btn("🔙 بازگشت", CD.ADMIN_SETTINGS),
     )
     return builder.as_markup()
 

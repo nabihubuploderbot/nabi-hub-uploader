@@ -325,7 +325,7 @@ async def toggle_buttons(
 # ═══════════════════════════════════════════════════════
 
 
-@router.message(F.text == "/addchannel" or F.text.startswith("/addchannel "))
+@router.message(F.text == "/addchannel" | F.text.startswith("/addchannel "))
 async def cmd_add_channel(
     message: Message,
     state: FSMContext,
@@ -428,7 +428,7 @@ async def process_channel_id(
 # ═══════════════════════════════════════════════════════
 
 
-@router.message(F.text == "/removechannel" or F.text.startswith("/removechannel "))
+@router.message(F.text == "/removechannel" | F.text.startswith("/removechannel "))
 async def cmd_remove_channel(
     message: Message,
     state: FSMContext,
@@ -575,7 +575,7 @@ async def process_reaction_message(
 # ═══════════════════════════════════════════════════════
 
 
-@router.message(F.text == "/addadmin" or F.text.startswith("/addadmin "))
+@router.message(F.text == "/addadmin" | F.text.startswith("/addadmin "))
 async def cmd_add_admin(
     message: Message,
     state: FSMContext,
@@ -625,7 +625,7 @@ async def process_admin_id(
         await message.answer("⚠️ آیدی نامعتبر.")
 
 
-@router.message(F.text == "/removeadmin" or F.text.startswith("/removeadmin "))
+@router.message(F.text == "/removeadmin" | F.text.startswith("/removeadmin "))
 async def cmd_remove_admin(
     message: Message,
     state: FSMContext,
