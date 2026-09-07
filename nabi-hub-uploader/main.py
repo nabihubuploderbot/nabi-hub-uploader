@@ -95,14 +95,33 @@ async def setup_middlewares() -> None:
         dp.message.middleware(throttle)
         dp.callback_query.middleware(throttle)
 
-    # 4. Force join middleware (applied to messages and callbacks)
+        # 4. Force join middleware (applied to messages and callbacks)
     dp.message.middleware(ForceJoinMiddleware())
     dp.callback_query.middleware(ForceJoinMiddleware())
-        # 5. Admin authentication
-    dp.message.middleware(AdminAuthMiddleware())
-    dp.callback_query.middleware(AdminAuthMiddleware())
+
+    # 5. Admin authentication — attached ONLY to admin + upload routers.
+    #    (Registering it on dp.message/dp.callback_query blocked EVERY
+    #    non-admin update: regular users could never download files.)
+    from handlers.admin_panel import router as admin_panel_router
+    from handlers.admin_settings import router as admin_settings_router
+    from handlers.admin_broadcast import router as admin_broadcast_router
+    from handlers.admin_files import router as admin_files_router
+    from handlers.admin_users import router as admin_users_router
+    from handlers.upload import router as upload_router
+
+    for _admin_router in (
+        admin_panel_router,
+        admin_settings_router,
+        admin_broadcast_router,
+        admin_files_router,
+        admin_users_router,
+        upload_router,
+    ):
+        _admin_router.message.middleware(AdminAuthMiddleware())
+        _admin_router.callback_query.middleware(AdminAuthMiddleware())
 
     logger.info("✅ All middlewares registered")
+
 
 
 async def setup_handlers() -> None:
