@@ -11,7 +11,7 @@ import uuid
 from typing import Callable
 
 from aiogram import Router, F, Bot
-from aiogram.types import Message, ContentType
+from aiogram.types import Message, CallbackQuery, ContentType
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from sqlalchemy.ext.asyncio import AsyncSession
