@@ -12,7 +12,7 @@ from __future__ import annotations
 from typing import Callable
 
 from aiogram import Router, F, Bot
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart, Command
 from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
@@ -256,3 +256,20 @@ async def cmd_help(message: Message, t: Callable[[str], str]) -> None:
         "برای پشتیبانی با ادمین تماس بگیرید.",
         parse_mode="Markdown",
     )
+
+@router.callback_query(F.data.startswith(f"{CD.GET_FILE}:"))
+async def cb_get_file(
+    callback: CallbackQuery,
+    session: AsyncSession,
+    t: Callable[[str], str],
+) -> None:
+    """Re-send the file when the user presses the get-file button."""
+    token = callback.data.split(":", 1)[1]
+    file_record = await FileService.get_by_token(session, token)
+    if not file_record:
+        await callback.answer(t("file_not_found"), show_alert=True)
+        return
+
+    await _send_file(callback.message, file_record, t, session)
+    await callback.answer()
+
