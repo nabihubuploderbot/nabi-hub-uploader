@@ -173,6 +173,11 @@ def admin_settings_menu() -> InlineKeyboardMarkup:
     )
     builder.row(
         _btn("👤 مدیریت کاربر", CD.SETTINGS_USER_MGMT),
+        _btn("👑 مدیریت ادمین‌ها", CD.ADV_ADMIN_MGMT),
+    )
+    builder.row(
+        _btn("⏱ تنظیمات تایمر", CD.ADV_TIMER),
+        _btn("🔑 تنظیم پسورد", CD.ADV_PASSWORD),
     )
     builder.row(
         _btn("🔙 بازگشت", CD.ADMIN_PANEL),
