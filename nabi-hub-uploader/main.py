@@ -107,6 +107,8 @@ async def setup_middlewares() -> None:
     from handlers.admin_broadcast import router as admin_broadcast_router
     from handlers.admin_files import router as admin_files_router
     from handlers.admin_users import router as admin_users_router
+    from handlers.admin_channel import router as admin_channel_router
+    from handlers.admin_manage import router as admin_manage_router
     from handlers.upload import router as upload_router
 
     for _admin_router in (
@@ -115,6 +117,8 @@ async def setup_middlewares() -> None:
         admin_broadcast_router,
         admin_files_router,
         admin_users_router,
+        admin_channel_router,
+        admin_manage_router,
         upload_router,
     ):
         _admin_router.message.middleware(AdminAuthMiddleware())
