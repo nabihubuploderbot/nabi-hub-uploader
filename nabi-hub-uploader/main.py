@@ -98,6 +98,9 @@ async def setup_middlewares() -> None:
     # 4. Force join middleware (applied to messages and callbacks)
     dp.message.middleware(ForceJoinMiddleware())
     dp.callback_query.middleware(ForceJoinMiddleware())
+        # 5. Admin authentication
+    dp.message.middleware(AdminAuthMiddleware())
+    dp.callback_query.middleware(AdminAuthMiddleware())
 
     logger.info("✅ All middlewares registered")
 
