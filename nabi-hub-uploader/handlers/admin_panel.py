@@ -661,55 +661,6 @@ async def show_send_all(
 
 
 # ═══════════════════════════════════════════════════════
-# قفل عضویت
-# ═══════════════════════════════════════════════════════
-
-
-@router.callback_query(F.data == CD.SETTINGS_FORCE_JOIN)
-async def show_force_join_settings(
-    callback: CallbackQuery,
-    session: AsyncSession,
-    is_admin: bool,
-) -> None:
-    """قفل عضویت."""
-    if not is_admin:
-        return
-
-    channels = await ChannelService.get_active_channels(session)
-    text = "🔒 **قفل عضویت اجباری**\n\n"
-    if channels:
-        for ch in channels:
-            text += f"✅ {ch.display_name} (`{ch.channel_id}`)\n"
-    else:
-        text += "هیچ کانال فعالی نیست.\n"
-
-    await callback.message.edit_text(text, reply_markup=force_join_menu(), parse_mode="Markdown")
-    await callback.answer()
-
-
-# ═══════════════════════════════════════════════════════
-# قفل واکنش
-# ═══════════════════════════════════════════════════════
-
-
-@router.callback_query(F.data == CD.ADV_REACTION)
-async def show_reaction_lock(
-    callback: CallbackQuery,
-    is_admin: bool,
-) -> None:
-    """قفل واکنش."""
-    if not is_admin:
-        return
-
-    await callback.message.edit_text(
-        "❤️ **قفل واکنش**\n\nاز منوی زیر عمل مورد نظر را انتخاب کنید:",
-        reply_markup=reaction_lock_menu(),
-        parse_mode="Markdown",
-    )
-    await callback.answer()
-
-
-# ═══════════════════════════════════════════════════════
 # تایمر و پسورد
 # ═══════════════════════════════════════════════════════
 
