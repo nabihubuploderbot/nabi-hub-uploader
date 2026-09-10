@@ -22,6 +22,7 @@ from keyboards.inline import (
     file_delete_confirm_keyboard,
     file_pagination_keyboard,
     back_button,
+    panel_button,
 )
 from keyboards.reply import admin_reply_menu, remove_keyboard
 

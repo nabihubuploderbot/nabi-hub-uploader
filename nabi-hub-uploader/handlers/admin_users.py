@@ -20,6 +20,7 @@ from keyboards.inline import (
     CD,
     admin_user_management,
     back_button,
+    panel_button,
 )
 from keyboards.reply import admin_reply_menu, remove_keyboard
 
@@ -219,4 +220,4 @@ async def process_unban_user(
                 reply_markup=admin_reply_menu(),
             )
     except ValueError:
-        await message.answer("⚠️ آیدی نامعتبر.")
+        await message.answer("⚠️ آیدی نامعتبر.", reply_markup=panel_button())
