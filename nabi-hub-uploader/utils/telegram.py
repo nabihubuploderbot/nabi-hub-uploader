@@ -1,7 +1,7 @@
 """
 utils/telegram.py — Telegram API helper functions.
 
-Fixed: better error handling for membership checks.
+Fixed: proper error handling for membership checks.
 """
 
 from __future__ import annotations
@@ -24,7 +24,6 @@ async def check_membership(
 
     Returns:
         Tuple of (is_member: bool, status: str or None).
-        If the bot can't check (not admin), returns (True, "skip").
     """
     try:
         member = await bot.get_chat_member(chat_id=chat_id, user_id=user_id)
@@ -43,16 +42,27 @@ async def check_membership(
 
     except Exception as e:
         error_str = str(e).lower()
-        # اگر بات ادمین کانال نیست، خطا میده
-        # در این حالت نمیتونیم عضویت رو چک کنیم
-        # پس عضویت رو تأیید می‌کنیم تا کاربر گیر نکنه
-        if "not enough rights" in error_str or "not member" in error_str or "admin" in error_str or "chat not found" in error_str:
-            logger.warning(
-                f"⚠️ Cannot check membership in {chat_id}: Bot is not admin! "
-                f"Make the bot an admin in the channel to enable force join check."
-            )
-            # بات نمیتونه چک کنه → عضویت رو تأیید کن
-            return True, "skip"
+
+        # خطاهایی که نشون می‌دن بات اصلاً نمیتونه چک کنه
+        # (بات عضو کانال نیست یا کانال وجود نداره)
+        fatal_errors = [
+            "chat not found",
+            "bot is not a member",
+            "not enough rights",
+            "peer_id_invalid",
+            "channel_private",
+        ]
+
+        for fatal in fatal_errors:
+            if fatal in error_str:
+                logger.error(
+                    f"❌ CANNOT check membership in {chat_id}: {e}\n"
+                    f"   ⚠️ Make sure the bot is an ADMIN in this channel!"
+                )
+                # بات نمیتونه چک کنه → False برگردون (بلاک کن)
+                return False, "error"
+
+        # خطاهای دیگه (مثلاً rate limit)
         logger.error(f"Failed to check membership for user {user_id} in {chat_id}: {e}")
         return False, None
 
